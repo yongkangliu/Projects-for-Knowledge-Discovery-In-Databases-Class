@@ -9,16 +9,32 @@ import org.junit.Test;
 public class OriginalDataTest {
 
     @Test
-    public void test() throws Exception {
-        OriginalData file = CSVFile.readCSV("test/dataSet1.csv");
-        assertEquals("d1", file.getValue("x1", "d"));
-        assertEquals("d1", file.getValue("x2", "d"));
-        assertEquals("d2", file.getValue("x3", "d"));
-        assertEquals("d2", file.getValue("x4", "d"));
-        assertEquals("d1", file.getValue("x5", "d"));
-        assertEquals("d2", file.getValue("x6", "d"));
-        assertEquals("d2", file.getValue("x7", "d"));
-        assertEquals("d1", file.getValue("x8", "d"));
+    public void test1() throws Exception {
+        OriginalData originalData = CSVFile.readCSV("test/dataSet1.csv");
+        assertEquals("d2", originalData.getValue("x1", "D"));
+        assertEquals("d2", originalData.getValue("x2", "D"));
+        assertEquals("d2", originalData.getValue("x3", "D"));
+        assertEquals("d2", originalData.getValue("x4", "D"));
+        assertEquals("d1", originalData.getValue("x5", "D"));
+        assertEquals("d1", originalData.getValue("x6", "D"));
+        assertEquals("d1", originalData.getValue("x7", "D"));
+        assertEquals("d1", originalData.getValue("x8", "D"));
+
+        DiscernableData discernableData = originalData.caLculateDiscernableData();
+
+        assertEquals("b2", discernableData.getValue("x1", "x5").get(0));
+        assertEquals("b2", discernableData.getValue("x1", "x6").get(0));
+        assertEquals("c1", discernableData.getValue("x1", "x7").get(0));
+        assertEquals("e1", discernableData.getValue("x1", "x7").get(1));
+        assertEquals("b2", discernableData.getValue("x1", "x8").get(0));
+        assertEquals("c1", discernableData.getValue("x1", "x8").get(1));
+        assertEquals("e1", discernableData.getValue("x1", "x8").get(2));
+
+        assertEquals(null, discernableData.getValue("x3", "x5").get(0));
+        assertEquals(null, discernableData.getValue("x3", "x6").get(0));
+        assertEquals("b1", discernableData.getValue("x3", "x7").get(0));
+        assertEquals("c1", discernableData.getValue("x3", "x7").get(1));
+        assertEquals("c1", discernableData.getValue("x3", "x8").get(0));
     }
 
 }

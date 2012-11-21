@@ -50,7 +50,12 @@ public class OriginalData {
     public String getValue(String name, String attribute) {
         int iName = this.nameMap.get(name);
         int iAttribute = this.attributesMap.get(attribute);
-        return this.dataSet[iName][iAttribute];
+        String str = this.dataSet[iName][iAttribute].trim();
+        if ("".equals(str)) {
+            return null;
+        } else {
+            return str;
+        }
     }
 
     public DiscernableData caLculateDiscernableData() {
@@ -72,8 +77,12 @@ public class OriginalData {
             for (int j = 0; j < desiredList.size(); j++) {
                 for (int k = 1; k < this.dataSet[0].length - 1; k++) {
                     String str1 = getValue(desiredList.get(j), this.dataSet[0][k]);
-                    String str2 = getValue(unDesiredList.get(j), this.dataSet[0][k]);
-                    if (str1 != str2) {
+                    String str2 = getValue(unDesiredList.get(i), this.dataSet[0][k]);
+
+                    if (str1 == null || !str1.equals(str2)) {
+                        if (discernableData[i][j] == null) {
+                            discernableData[i][j] = new ArrayList<String>();
+                        }
                         discernableData[i][j].add(str1);
                     }
                 }

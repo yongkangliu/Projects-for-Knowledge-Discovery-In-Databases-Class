@@ -1,6 +1,6 @@
 package kdd.data;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,13 +8,9 @@ import java.util.Map;
 public class DiscernableData {
     private static DiscernableData instance = null;
 
-    // P is the number of data set with desired decision attribute
-    private int P = 0;
-    // Q is the number of data set with undesired decision attribute
-    private int Q = 0;
+    private Map<String, Integer> desiredMap = new HashMap<String, Integer>();
+    private Map<String, Integer> unDesiredMap = new HashMap<String, Integer>();
 
-    private String[] desiredSet = new String[P];
-    private String[] undesiredSet = new String[Q];
     private List<String>[][] dataSet;
 
     private DiscernableData() {
@@ -22,9 +18,14 @@ public class DiscernableData {
     }
 
     private DiscernableData(String[] desiredSet, String[] undesiredSet, List<String>[][] dataSet) {
-        this.desiredSet = desiredSet;
-        this.undesiredSet = undesiredSet;
         this.dataSet = dataSet;
+
+        for (int i = 0; i < desiredSet.length; i++) {
+            this.desiredMap.put(desiredSet[i], i);
+        }
+        for (int i = 0; i < undesiredSet.length; i++) {
+            this.unDesiredMap.put(undesiredSet[i], i);
+        }
     }
 
     public static DiscernableData initialize(String[] desiredSet, String[] undesiredSet, List<String>[][] dataSet) {
@@ -37,8 +38,15 @@ public class DiscernableData {
         return DiscernableData.instance;
     }
 
+    public List<String> getValue(String desiredName, String unDesiredName) {
+        int iDesiredName = this.desiredMap.get(desiredName);
+        int iUnDesiredName = this.unDesiredMap.get(unDesiredName);
+        return this.dataSet[iUnDesiredName][iDesiredName];
+    }
+
     public ReductData calculateReductData() {
         // TODO
         return ReductData.initialize(null);
     }
+
 }
