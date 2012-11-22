@@ -81,7 +81,7 @@ public class DiscernableData {
 
     public ReductData calculateReductData() {
         for (int i = 0; i < this.desiredAlphaReducts.length; i++) {
-            List<String>[] inputList = new List[this.dataSet.length];
+            List<String>[] inputList = new ArrayList[this.dataSet.length];
             for (int j = 0; j < this.dataSet.length; j++) {
                 if (this.dataSet[j][i].get(0) == null) {
                     this.desiredAlphaReducts[i] = null;
@@ -117,7 +117,7 @@ public class DiscernableData {
         for (int i = 0; i < listDNF.length; i++) {
             for (int j = 0; j < inputList.length; j++) {
                 if (listDNF[i] == null) {
-                    listDNF[i] = new ArrayList();
+                    listDNF[i] = new ArrayList<String>();
                 }
                 if (position[j] >= inputList[j].size()) {
                     position[j] = 0;

@@ -2,12 +2,15 @@ package kdd.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -16,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import kdd.data.DiscernableData;
 import kdd.data.OriginalData;
@@ -26,12 +30,52 @@ public class KDDGUI extends JPanel {
     private static final long serialVersionUID = 5483099078233967340L;
     private static JTable table;
     private static DataTableModel tableModel;
+    private static JTextField desiredValue = new JTextField("");
 
     public KDDGUI() {
-        super();
+        super(new BorderLayout());
+
+        // Buttons
+        JPanel panel = new JPanel(new GridLayout(1, 3));
+        panel.add(new JLabel("Desired Value:"));
+        panel.add(desiredValue);
+
+        JButton runButton = new JButton("RUN");
+        panel.add(runButton);
+        runButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        OriginalData data = OriginalData.getInstance();
+                        if (data != null) {
+                            if ("".equals(desiredValue.getText())) {
+                                JOptionPane.showMessageDialog(null, "Set desired value!", "Alert",
+                                        JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                data.setDesiredValue(desiredValue.getText());
+                                DiscernableData discernableData = data.caLculateDiscernableData();
+                                ReductData reductData = discernableData.calculateReductData();
+                                reductData.calculateRecommendation();
+
+                                DataTableModel tableModel = new DataTableModel(reductData.getTableColumnNames(),
+                                        reductData.getTableData());
+                                table.setModel(tableModel);
+                                table.repaint();
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Open data file first!", "Alert",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }).start();
+            }
+        });
+
+        add(panel, BorderLayout.NORTH);
 
         // The table
-        KDDGUI.tableModel = new DataTableModel(4, 7);
+        KDDGUI.tableModel = new DataTableModel(7, 7);
         KDDGUI.table = new JTable(KDDGUI.tableModel);
         KDDGUI.table.setPreferredScrollableViewportSize(new Dimension(600, 500));
         KDDGUI.table.setFillsViewportHeight(true);
@@ -44,7 +88,7 @@ public class KDDGUI extends JPanel {
         JScrollPane scrollPaneTable = new JScrollPane(KDDGUI.table);
 
         // Add the scroll pane to this panel.
-        add(scrollPaneTable);
+        add(scrollPaneTable, BorderLayout.CENTER);
     }
 
     /**
@@ -73,9 +117,6 @@ public class KDDGUI extends JPanel {
                     File file = fc.getSelectedFile();
                     try {
                         OriginalData originalData = CSVFile.readCSV(file.getAbsolutePath());
-                        DiscernableData discernableData = originalData.caLculateDiscernableData();
-                        ReductData reductData = discernableData.calculateReductData();
-                        reductData.calculateRecommendation();
 
                         DataTableModel tableModel = new DataTableModel(originalData.getTableColumnNames(), originalData
                                 .getTableData());
@@ -104,9 +145,11 @@ public class KDDGUI extends JPanel {
         originalItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 OriginalData data = OriginalData.getInstance();
-                DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
-                table.setModel(tableModel);
-                table.repaint();
+                if (data != null) {
+                    DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
+                    table.setModel(tableModel);
+                    table.repaint();
+                }
             }
         });
 
@@ -114,9 +157,11 @@ public class KDDGUI extends JPanel {
         discernableItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 DiscernableData data = DiscernableData.getInstance();
-                DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
-                table.setModel(tableModel);
-                table.repaint();
+                if (data != null) {
+                    DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
+                    table.setModel(tableModel);
+                    table.repaint();
+                }
             }
         });
 
@@ -124,9 +169,11 @@ public class KDDGUI extends JPanel {
         reductItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 ReductData data = ReductData.getInstance();
-                DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
-                table.setModel(tableModel);
-                table.repaint();
+                if (data != null) {
+                    DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
+                    table.setModel(tableModel);
+                    table.repaint();
+                }
             }
         });
 
@@ -134,9 +181,11 @@ public class KDDGUI extends JPanel {
         recommendationItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 ReductData data = ReductData.getInstance();
-                DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
-                table.setModel(tableModel);
-                table.repaint();
+                if (data != null) {
+                    DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
+                    table.setModel(tableModel);
+                    table.repaint();
+                }
             }
         });
 

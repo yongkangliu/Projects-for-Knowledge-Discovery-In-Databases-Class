@@ -107,13 +107,8 @@ public class OriginalData {
             }
         }
 
-        // TODO
         return DiscernableData.initialize(desiredList.toArray(new String[desiredList.size()]),
                 unDesiredList.toArray(new String[unDesiredList.size()]), discernableData);
-    }
-
-    public String getDesiredValue() {
-        return desiredValue;
     }
 
     public void setDesiredValue(String desiredValue) {

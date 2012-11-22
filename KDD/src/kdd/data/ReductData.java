@@ -1,29 +1,26 @@
 package kdd.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //Table 5 in the paper
 public class ReductData {
     private static ReductData instance = null;
 
-    // K is the number of reducts.
-    private int K = 0;
-    // 3 means that there are three data: weight, frequency and hit ratio.
-
-    private List[] reducts = new ArrayList[K];
-    private int[][] reductValues = new int[K][3];
+    private List<String>[] reducts;
+    private int[][] reductValues;
 
     private ReductData() {
         // Nothing here.
     }
 
-    private ReductData(List[] reducts) {
+    private ReductData(List<String>[] reducts) {
         this.reducts = reducts;
+
+        // 3 means that there are three data: weight, frequency and hit ratio.
         this.reductValues = new int[reducts.length][3];
     }
 
-    public static ReductData initialize(List[] reducts) {
+    public static ReductData initialize(List<String>[] reducts) {
         ReductData data = new ReductData(reducts);
         ReductData.instance = data;
         return data;
@@ -50,7 +47,7 @@ public class ReductData {
 
     public String[] calculateRecommendation() {
         // TODO
-        return new String[] {};
+        return new String[] { "print out recommendations here." };
     }
 
     // public static void main(String[] args) {

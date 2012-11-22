@@ -8,12 +8,12 @@ public class DataTableModel extends AbstractTableModel {
     private String[] columnNames;
     private Object[][] data;
 
-    public DataTableModel(int numOfIntervals, int numOfUnits) {
-        this.columnNames = new String[numOfIntervals];
+    public DataTableModel(int col, int row) {
+        this.columnNames = new String[col];
         for (int i = 0; i < this.columnNames.length; i++) {
             this.columnNames[i] = "Col " + i;
         }
-        this.data = new Object[numOfUnits][numOfIntervals];
+        this.data = new Object[row][col];
 
     }
 
