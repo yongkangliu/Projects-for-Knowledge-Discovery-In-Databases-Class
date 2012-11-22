@@ -47,6 +47,24 @@ public class OriginalData {
         return OriginalData.instance;
     }
 
+    public Object[][] getTableData() {
+        String[][] data = new String[this.dataSet.length - 2][];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = this.dataSet[i + 2];
+        }
+        return data;
+    }
+
+    public String[] getTableColumnNames() {
+        String[] names = new String[this.dataSet[0].length];
+        for (int i = 0; i < names.length; i++) {
+            if (this.dataSet[1][i] != null && !"".equals(this.dataSet[1][i])) {
+                names[i] = this.dataSet[0][i] + "(" + this.dataSet[1][i] + ")";
+            }
+        }
+        return names;
+    }
+
     public String getValue(String name, String attribute) {
         int iName = this.nameMap.get(name);
         int iAttribute = this.attributesMap.get(attribute);

@@ -10,8 +10,16 @@ public class DataTableModel extends AbstractTableModel {
 
     public DataTableModel(int numOfIntervals, int numOfUnits) {
         this.columnNames = new String[numOfIntervals];
+        for (int i = 0; i < this.columnNames.length; i++) {
+            this.columnNames[i] = "Col " + i;
+        }
         this.data = new Object[numOfUnits][numOfIntervals];
 
+    }
+
+    public DataTableModel(String[] columnNames, Object[][] data) {
+        this.columnNames = columnNames;
+        this.data = data;
     }
 
     public int getColumnCount() {

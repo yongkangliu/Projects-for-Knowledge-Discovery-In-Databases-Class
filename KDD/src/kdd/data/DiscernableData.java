@@ -10,6 +10,7 @@ public class DiscernableData {
     private static DiscernableData instance = null;
 
     private String[] desiredSet;
+    private String[] undesiredSet;
     private List<String>[][] desiredAlphaReducts;
     private Map<String, Integer> desiredMap = new HashMap<String, Integer>();
     private Map<String, Integer> unDesiredMap = new HashMap<String, Integer>();
@@ -24,6 +25,7 @@ public class DiscernableData {
         this.dataSet = dataSet;
 
         this.desiredSet = desiredSet;
+        this.undesiredSet = undesiredSet;
         if (desiredSet != null) {
             this.desiredAlphaReducts = new List[desiredSet.length][];
         }
@@ -48,6 +50,27 @@ public class DiscernableData {
 
     public static DiscernableData getInstance() {
         return DiscernableData.instance;
+    }
+
+    public Object[][] getTableData() {
+        String[][] tableData = new String[this.undesiredSet.length][this.desiredSet.length + 1];
+        for (int i = 0; i < this.undesiredSet.length; i++) {
+            tableData[i][0] = this.undesiredSet[i];
+            for (int j = 0; j < this.desiredSet.length; j++) {
+                String str = this.dataSet[i][j].toString();
+                tableData[i][j + 1] = str;
+            }
+        }
+
+        return tableData;
+    }
+
+    public String[] getTableColumnNames() {
+        String[] names = new String[this.desiredSet.length + 1];
+        for (int i = 1; i < names.length; i++) {
+            names[i] = this.desiredSet[i - 1];
+        }
+        return names;
     }
 
     public List<String> getValue(String desiredName, String unDesiredName) {
