@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -27,26 +28,23 @@ public class KDDGUI extends JPanel {
     private static DataTableModel tableModel;
 
     public KDDGUI() {
-        super(new BorderLayout());
+        super();
 
         // The table
-        this.tableModel = new DataTableModel(4, 7);
-        this.table = new JTable(this.tableModel);
-        this.table.setPreferredScrollableViewportSize(new Dimension(500, 300));
-        this.table.setFillsViewportHeight(true);
-        this.table.getTableHeader().setReorderingAllowed(false);
-        // this.table.setTableHeader(null);
-        this.table.setSelectionForeground(null);
-        this.table.setSelectionBackground(null);
-        this.table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        KDDGUI.tableModel = new DataTableModel(4, 7);
+        KDDGUI.table = new JTable(KDDGUI.tableModel);
+        KDDGUI.table.setPreferredScrollableViewportSize(new Dimension(600, 500));
+        KDDGUI.table.setFillsViewportHeight(true);
+        KDDGUI.table.getTableHeader().setReorderingAllowed(false);
+        KDDGUI.table.setSelectionForeground(null);
+        KDDGUI.table.setSelectionBackground(null);
+        KDDGUI.table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         // Create the scroll pane and add the table to it.
-        JScrollPane scrollPaneTable = new JScrollPane(this.table);
+        JScrollPane scrollPaneTable = new JScrollPane(KDDGUI.table);
 
         // Add the scroll pane to this panel.
-        add(scrollPaneTable, BorderLayout.NORTH);
-        // add(panel, BorderLayout.SOUTH);
-
+        add(scrollPaneTable);
     }
 
     /**
@@ -77,13 +75,13 @@ public class KDDGUI extends JPanel {
                         OriginalData originalData = CSVFile.readCSV(file.getAbsolutePath());
                         DiscernableData discernableData = originalData.caLculateDiscernableData();
                         ReductData reductData = discernableData.calculateReductData();
+                        reductData.calculateRecommendation();
 
                         DataTableModel tableModel = new DataTableModel(originalData.getTableColumnNames(), originalData
                                 .getTableData());
                         table.setModel(tableModel);
                     } catch (Exception e) {
-                        // TODO
-                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, e.toString(), "Alert", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -157,6 +155,7 @@ public class KDDGUI extends JPanel {
 
         // Display the window.
         frame.pack();
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 
