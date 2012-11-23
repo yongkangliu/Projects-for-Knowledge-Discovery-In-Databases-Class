@@ -94,21 +94,25 @@ public class ReductData {
         int row = 0;
         double maxWeight = 0;
         for (int i = 0; i < this.reducts.length; i++) {
-            if (this.reductValues[i][1] > maxWeight) {
-                maxWeight = this.reductValues[i][1];
+            if (this.reductValues[i][0] > maxWeight) {
+                maxWeight = this.reductValues[i][0];
                 row = i;
+            } else if (Math.abs(this.reductValues[i][0] - maxWeight) < 0.0001) {
+                if (this.reducts[i].size() < this.reducts[row].size()) {
+                    row = i;
+                }
             }
         }
 
         OriginalData originalData = OriginalData.getInstance();
-        List<String[]> rules = originalData.getRecommendationRules(this.reducts[row]);
+        List<String> rules = originalData.getRecommendationRules(this.reducts[row]);
         String[][] recommendations = new String[1][1];
         recommendations[0][0] = "Change the value of ";
         for (int i = 0; i < rules.size(); i++) {
             if (i == 0) {
-                recommendations[0][0] += rules.get(i)[0] + " to " + rules.get(i)[1];
+                recommendations[0][0] += rules.get(i);
             } else {
-                recommendations[0][0] += ", " + rules.get(i)[0] + " to " + rules.get(i)[1];
+                recommendations[0][0] += ", " + rules.get(i);
             }
         }
         recommendations[0][0] += " in order to induce the decision value in X-b to " + originalData.getDesiredValue();

@@ -2,8 +2,6 @@ package kdd.data;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-
 import kdd.ui.CSVFile;
 
 import org.junit.Test;
@@ -13,6 +11,8 @@ public class OriginalDataTest {
     @Test
     public void test1() throws Exception {
         OriginalData originalData = CSVFile.readCSV("test/dataSet1.csv");
+        originalData.setDesiredValue("d2");
+
         assertEquals("d2", originalData.getValue("x1", "D"));
         assertEquals("d2", originalData.getValue("x2", "D"));
         assertEquals("d2", originalData.getValue("x3", "D"));
@@ -42,6 +42,7 @@ public class OriginalDataTest {
     @Test
     public void test2() throws Exception {
         OriginalData originalData = CSVFile.readCSV("test/dataSet1.csv");
+        originalData.setDesiredValue("d2");
         DiscernableData discernableData = originalData.caLculateDiscernableData();
 
         ReductData reductData = discernableData.calculateReductData();

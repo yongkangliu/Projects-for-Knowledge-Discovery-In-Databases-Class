@@ -30,11 +30,13 @@ public class OriginalData {
         this.nameMap.clear();
         this.dataSet = dataSet;
 
-        for (int i = 1; i < dataSet[0].length; i++) {
-            this.attributesMap.put(dataSet[0][i], i);
-        }
-        for (int i = 2; i < dataSet.length; i++) {
-            this.nameMap.put(dataSet[i][0], i);
+        if (dataSet != null) {
+            for (int i = 1; i < dataSet[0].length; i++) {
+                this.attributesMap.put(dataSet[0][i], i);
+            }
+            for (int i = 2; i < dataSet.length; i++) {
+                this.nameMap.put(dataSet[i][0], i);
+            }
         }
     }
 
@@ -66,26 +68,29 @@ public class OriginalData {
         return names;
     }
 
-    public String[] getReductPair(String reduct) {
+    public String getReductPair(String reduct) {
         for (int i = 0; i < this.dataSet.length; i++) {
             for (int j = 0; j < this.dataSet[0].length; j++) {
                 if (this.dataSet[i][j].equals(reduct)) {
-                    return new String[] { this.dataSet[0][j], reduct };
+                    if ("s".equals(this.dataSet[1][j])) {
+                        return new String(this.dataSet[0][j] + " = " + reduct);
+                    } else {
+                        return new String(this.dataSet[0][j] + " to " + reduct);
+                    }
                 }
             }
         }
         return null;
     }
 
-    public List<String[]> getRecommendationRules(List<String> reduct) {
-        List<String[]> rules = new ArrayList<String[]>();
+    public List<String> getRecommendationRules(List<String> reduct) {
+        List<String> rules = new ArrayList<String>();
         for (int i = 0; i < reduct.size(); i++) {
-            String[] reductPair = getReductPair(reduct.get(i));
+            String reductPair = getReductPair(reduct.get(i));
             if (reductPair != null) {
                 rules.add(reductPair);
             }
         }
-
         return rules;
     }
 

@@ -95,6 +95,7 @@ public class DiscernableDataTest {
         d.add("e1");
 
         List<String>[] result = data.absorptionLaw(new List[] { a, b, c, d });
+        
 
         assertEquals(2, result.length);
         assertEquals(1, result[0].size());
@@ -240,9 +241,13 @@ public class DiscernableDataTest {
     @Test
     public void testCalculateReductData1() throws Exception {
         OriginalData originalData = CSVFile.readCSV("test/dataSet1.csv");
+        originalData.setDesiredValue("d2");
         DiscernableData discernableData = originalData.caLculateDiscernableData();
 
         ReductData result = discernableData.calculateReductData();
-        assertEquals(3, 1);
+        result.createRecommendation();
+        Object[][] objects = result.getTableData();
+
+        assertEquals(3, objects.length);
     }
 }
