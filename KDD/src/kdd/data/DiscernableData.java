@@ -22,6 +22,9 @@ public class DiscernableData {
     }
 
     private DiscernableData(String[] desiredSet, String[] undesiredSet, List<String>[][] dataSet) {
+        this.desiredMap.clear();
+        this.unDesiredMap.clear();
+
         this.dataSet = dataSet;
 
         this.desiredSet = desiredSet;
@@ -57,7 +60,19 @@ public class DiscernableData {
         for (int i = 0; i < this.undesiredSet.length; i++) {
             tableData[i][0] = this.undesiredSet[i];
             for (int j = 0; j < this.desiredSet.length; j++) {
-                String str = this.dataSet[i][j].toString();
+
+                String str = "";
+
+                for (int k = 0; k < this.dataSet[i][j].size(); k++) {
+                    if (this.dataSet[i][j].get(k) != null) {
+                        if (k == 0) {
+                            str += this.dataSet[i][j].get(k);
+                        } else {
+                            str += " + " + this.dataSet[i][j].get(k);
+                        }
+                    }
+                }
+
                 tableData[i][j + 1] = str;
             }
         }
@@ -77,6 +92,14 @@ public class DiscernableData {
         int iDesiredName = this.desiredMap.get(desiredName);
         int iUnDesiredName = this.unDesiredMap.get(unDesiredName);
         return this.dataSet[iUnDesiredName][iDesiredName];
+    }
+
+    public String[] getDesiredSet() {
+        return this.desiredSet;
+    }
+
+    public String[] getUnDesiredSet() {
+        return this.undesiredSet;
     }
 
     public ReductData calculateReductData() {

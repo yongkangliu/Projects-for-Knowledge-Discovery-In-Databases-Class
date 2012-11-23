@@ -15,18 +15,19 @@ public class OriginalData {
     private static OriginalData instance = null;
 
     private Map<String, Integer> attributesMap = new HashMap<String, Integer>();
-
     private Map<String, Integer> nameMap = new HashMap<String, Integer>();
 
     private String[][] dataSet = new String[][] {};
 
-    private String desiredValue = "d2";
+    private String desiredValue = "";
 
     private OriginalData() {
         // Nothing here.
     }
 
     private OriginalData(String[][] dataSet) {
+        this.attributesMap.clear();
+        this.nameMap.clear();
         this.dataSet = dataSet;
 
         for (int i = 1; i < dataSet[0].length; i++) {
@@ -63,6 +64,64 @@ public class OriginalData {
             }
         }
         return names;
+    }
+
+    public String[] getReductPair(String reduct) {
+        for (int i = 0; i < this.dataSet.length; i++) {
+            for (int j = 0; j < this.dataSet[0].length; j++) {
+                if (this.dataSet[i][j].equals(reduct)) {
+                    return new String[] { this.dataSet[0][j], reduct };
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<String[]> getRecommendationRules(List<String> reduct) {
+        List<String[]> rules = new ArrayList<String[]>();
+        for (int i = 0; i < reduct.size(); i++) {
+            String[] reductPair = getReductPair(reduct.get(i));
+            if (reductPair != null) {
+                rules.add(reductPair);
+            }
+        }
+
+        return rules;
+    }
+
+    public boolean isFoundStableWithReduct(String name, List<String> reduct) {
+        int row = this.nameMap.get(name);
+        for (int j = 0; j < reduct.size(); j++) {
+            for (int i = 1; i < this.dataSet[0].length; i++) {
+                if (this.dataSet[row][i].equals(reduct.get(j))) {
+                    if ("s".equals(this.dataSet[1][i])) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isFoundWithReduct(String name, List<String> reduct) {
+        int row = this.nameMap.get(name);
+        for (int j = 0; j < reduct.size(); j++) {
+            boolean isFound = false;
+            for (int i = 1; i < this.dataSet[0].length; i++) {
+                if (this.dataSet[row][i].equals(reduct.get(j))) {
+                    if ("s".equals(this.dataSet[row][i])) {
+                        return true;
+                    }
+                    isFound = true;
+                    break;
+                }
+            }
+
+            if (!isFound) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public String getValue(String name, String attribute) {
@@ -109,6 +168,10 @@ public class OriginalData {
 
         return DiscernableData.initialize(desiredList.toArray(new String[desiredList.size()]),
                 unDesiredList.toArray(new String[unDesiredList.size()]), discernableData);
+    }
+
+    public String getDesiredValue() {
+        return this.desiredValue;
     }
 
     public void setDesiredValue(String desiredValue) {

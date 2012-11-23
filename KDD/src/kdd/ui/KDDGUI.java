@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.TableColumn;
 
 import kdd.data.DiscernableData;
 import kdd.data.OriginalData;
@@ -44,31 +45,24 @@ public class KDDGUI extends JPanel {
         panel.add(runButton);
         runButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        OriginalData data = OriginalData.getInstance();
-                        if (data != null) {
-                            if ("".equals(desiredValue.getText())) {
-                                JOptionPane.showMessageDialog(null, "Set desired value!", "Alert",
-                                        JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                data.setDesiredValue(desiredValue.getText());
-                                DiscernableData discernableData = data.caLculateDiscernableData();
-                                ReductData reductData = discernableData.calculateReductData();
-                                reductData.calculateRecommendation();
+                OriginalData data = OriginalData.getInstance();
+                if (data != null) {
+                    if ("".equals(desiredValue.getText())) {
+                        JOptionPane.showMessageDialog(null, "Set desired value!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        data.setDesiredValue(desiredValue.getText());
+                        DiscernableData discernableData = data.caLculateDiscernableData();
+                        ReductData reductData = discernableData.calculateReductData();
 
-                                DataTableModel tableModel = new DataTableModel(reductData.getTableColumnNames(),
-                                        reductData.getTableData());
-                                table.setModel(tableModel);
-                                table.repaint();
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Open data file first!", "Alert",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
+                        DataTableModel tableModel = new DataTableModel(reductData.getRecommendationColumn(), reductData
+                                .createRecommendation());
+                        table.setModel(tableModel);
+                        table.repaint();
+                        setColumnWidth(600);
                     }
-                }).start();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Open data file first!", "Alert", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -180,11 +174,13 @@ public class KDDGUI extends JPanel {
         JMenuItem recommendationItem = new JMenuItem("Recommendations");
         recommendationItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                ReductData data = ReductData.getInstance();
-                if (data != null) {
-                    DataTableModel tableModel = new DataTableModel(data.getTableColumnNames(), data.getTableData());
+                ReductData reductData = ReductData.getInstance();
+                if (reductData != null) {
+                    DataTableModel tableModel = new DataTableModel(reductData.getRecommendationColumn(), reductData
+                            .createRecommendation());
                     table.setModel(tableModel);
                     table.repaint();
+                    setColumnWidth(600);
                 }
             }
         });
@@ -206,6 +202,14 @@ public class KDDGUI extends JPanel {
         frame.pack();
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    private static void setColumnWidth(int width) {
+        TableColumn column = null;
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            column = table.getColumnModel().getColumn(i);
+            column.setPreferredWidth(width);
+        }
     }
 
     public static void main(String[] args) {
