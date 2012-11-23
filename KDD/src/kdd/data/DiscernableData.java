@@ -63,16 +63,17 @@ public class DiscernableData {
 
                 String str = "";
 
-                for (int k = 0; k < this.dataSet[i][j].size(); k++) {
-                    if (this.dataSet[i][j].get(k) != null) {
+                if (this.dataSet[i][j] != null) {
+                    for (int k = 0; k < this.dataSet[i][j].size(); k++) {
+                        // if (this.dataSet[i][j].get(k) != null) {
                         if (k == 0) {
                             str += this.dataSet[i][j].get(k);
                         } else {
                             str += " + " + this.dataSet[i][j].get(k);
                         }
+                        // }
                     }
                 }
-
                 tableData[i][j + 1] = str;
             }
         }
@@ -106,7 +107,7 @@ public class DiscernableData {
         for (int i = 0; i < this.desiredAlphaReducts.length; i++) {
             List<String>[] inputList = new ArrayList[this.dataSet.length];
             for (int j = 0; j < this.dataSet.length; j++) {
-                if (this.dataSet[j][i].get(0) == null) {
+                if (this.dataSet[j][i] == null || this.dataSet[j][i].get(0) == null) {
                     this.desiredAlphaReducts[i] = null;
                     break;
                 } else {
@@ -120,7 +121,9 @@ public class DiscernableData {
         for (int i = 0; i < this.desiredAlphaReducts.length; i++) {
             if (this.desiredAlphaReducts[i] != null) {
                 for (int j = 0; j < this.desiredAlphaReducts[i].length; j++) {
-                    reductsList.add(this.desiredAlphaReducts[i][j]);
+                    if (this.desiredAlphaReducts[i][j] != null) {
+                        reductsList.add(this.desiredAlphaReducts[i][j]);
+                    }
                 }
             }
         }
@@ -183,7 +186,7 @@ public class DiscernableData {
         for (String strA : a) {
             boolean isFound = false;
             for (String strB : b) {
-                if (strA.equals(strB)) {
+                if (strA != null && strA.equals(strB)) {
                     isFound = true;
                 }
             }
@@ -193,5 +196,4 @@ public class DiscernableData {
         }
         return true;
     }
-
 }

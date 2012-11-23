@@ -161,8 +161,13 @@ public class OriginalData {
                     String str1 = getValue(desiredList.get(j), this.dataSet[0][k]);
                     String str2 = getValue(unDesiredList.get(i), this.dataSet[0][k]);
 
-                    if (str1 == null || !str1.equals(str2)) {
+                    if (str1 == null) {
                         if (discernableData[i][j] == null) {
+                            discernableData[i][j] = new ArrayList<String>();
+                            discernableData[i][j].add(str1);
+                        }
+                    } else if (!str1.equals(str2)) {
+                        if (discernableData[i][j] == null || discernableData[i][j].get(0) == null) {
                             discernableData[i][j] = new ArrayList<String>();
                         }
                         discernableData[i][j].add(str1);
