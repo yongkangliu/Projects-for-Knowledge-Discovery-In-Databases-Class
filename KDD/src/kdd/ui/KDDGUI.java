@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -45,6 +46,8 @@ public class KDDGUI extends JPanel {
         panel.add(runButton);
         runButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
+                Calendar startTime = Calendar.getInstance();
+
                 OriginalData data = OriginalData.getInstance();
                 if (data != null) {
                     if ("".equals(desiredValue.getText())) {
@@ -63,6 +66,9 @@ public class KDDGUI extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "Open data file first!", "Alert", JOptionPane.ERROR_MESSAGE);
                 }
+                Calendar endTime = Calendar.getInstance();
+                System.out.println("Time-consuming (seconds): "
+                        + (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000.0);
             }
         });
 

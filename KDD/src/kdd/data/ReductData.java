@@ -38,9 +38,9 @@ public class ReductData {
         String[][] data = new String[reducts.length][4];
         for (int i = 0; i < reducts.length; i++) {
             data[i][0] = this.reducts[i].toString();
-            data[i][1] = String.format("%.2f", this.reductValues[i][0]);
+            data[i][1] = String.format("%.4f", this.reductValues[i][0]);
             data[i][2] = String.format("%.0f", this.reductValues[i][1]);
-            data[i][3] = String.format("%.2f", this.reductValues[i][2]);
+            data[i][3] = String.format("%.4f", this.reductValues[i][2]);
         }
         return data;
     }

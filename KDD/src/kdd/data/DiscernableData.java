@@ -149,11 +149,22 @@ public class DiscernableData {
                     position[j] = 0;
                 }
                 inputList[j].get(position[j]);
-                listDNF[i].add(inputList[j].get(position[j]));
+                if (!hasString(listDNF[i], inputList[j].get(position[j]))) {
+                    listDNF[i].add(inputList[j].get(position[j]));
+                }
                 position[j]++;
             }
         }
         return listDNF;
+    }
+
+    private boolean hasString(List<String> list, String str) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(str)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<String>[] absorptionLaw(List<String>[] inputList) {

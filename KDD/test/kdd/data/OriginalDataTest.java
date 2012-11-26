@@ -49,14 +49,14 @@ public class OriginalDataTest {
         reductData.createRecommendation();
 
         Object[][] object = reductData.getTableData();
-        assertEquals("0.29", object[0][1]);
+        assertEquals("0.2857", object[0][1]);
         assertEquals("1", object[0][2]);
-        assertEquals("1.00", object[0][3]);
-        assertEquals("0.14", object[1][1]);
+        assertEquals("1.0000", object[0][3]);
+        assertEquals("0.1429", object[1][1]);
         assertEquals("1", object[1][2]);
-        assertEquals("0.50", object[1][3]);
-        assertEquals("0.57", object[2][1]);
+        assertEquals("0.5000", object[1][3]);
+        assertEquals("0.5714", object[2][1]);
         assertEquals("2", object[2][2]);
-        assertEquals("1.00", object[2][3]);
+        assertEquals("1.0000", object[2][3]);
     }
 }

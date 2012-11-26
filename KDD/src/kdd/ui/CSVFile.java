@@ -19,12 +19,23 @@ public class CSVFile {
 
         while (dataRow != null) {
             String[] dataArray = dataRow.split(",");
+            for (int i = 0; i < dataArray.length; i++) {
+                dataArray[i] = dataArray[i].trim();
+            }
             list.add(dataArray);
             dataRow = CSVFile.readLine();
         }
 
         CSVFile.close();
         String[][] result = list.toArray(new String[list.size()][list.get(0).length]);
+
+//        for (int i = 2; i < result.length; i++) {
+//            for (int j = 1; j < result[0].length; j++) {
+//                if (!"".equals(result[i][j])) {
+//                    result[i][j] = result[0][j] + ":" + result[i][j];
+//                }
+//            }
+//        }
 
         return OriginalData.initialize(result);
     }
