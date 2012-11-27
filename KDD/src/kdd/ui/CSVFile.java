@@ -1,3 +1,8 @@
+/*
+ * UNC Charlotte ITCS 6162 Knowledge Discovery in Databases - KDD  Class, Final Project
+ * 
+ * by Yongkang Liu, 11/27/2012
+ */
 package kdd.ui;
 
 import java.io.BufferedReader;
