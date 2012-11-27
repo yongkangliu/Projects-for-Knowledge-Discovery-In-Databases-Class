@@ -17,6 +17,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -50,6 +51,11 @@ public class KDDGUI extends JPanel {
     private static JTextField desiredValue = new JTextField("");
 
     /**
+     * The progress bar.
+     */
+    private static JProgressBar bar;
+
+    /**
      * Constructor. Initialize the GUI.
      */
     public KDDGUI() {
@@ -67,37 +73,43 @@ public class KDDGUI extends JPanel {
         // Set action listener for the RUN button.
         runButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                Calendar startTime = Calendar.getInstance();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Calendar startTime = Calendar.getInstance();
 
-                OriginalData data = OriginalData.getInstance();
-                if (data != null) {
-                    if ("".equals(desiredValue.getText())) {
-                        JOptionPane.showMessageDialog(null, "Set desired value!", "Alert", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        try {
-                            data.setDesiredValue(desiredValue.getText());
-                            DiscernableData discernableData = data.caLculateDiscernableData();
-                            ReductData reductData = discernableData.calculateReductData();
-
-                            DataTableModel tableModel = new DataTableModel(reductData.getRecommendationColumn(),
-                                    reductData.createRecommendation());
-                            table.setModel(tableModel);
-                            table.repaint();
-                            setColumnWidth(600);
-                        } catch (java.lang.OutOfMemoryError e) {
-                            JOptionPane
-                                    .showMessageDialog(null, "OutOfMemoryError!", "Alert", JOptionPane.ERROR_MESSAGE);
+                        OriginalData data = OriginalData.getInstance();
+                        if (data != null) {
+                            if ("".equals(desiredValue.getText())) {
+                                JOptionPane.showMessageDialog(null, "Set desired value!", "Alert",
+                                        JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                try {
+                                    data.setDesiredValue(desiredValue.getText());
+                                    DiscernableData discernableData = data.caLculateDiscernableData();
+                                    ReductData reductData = discernableData.calculateReductData();
+                                    reductData.createRecommendation();
+                                } catch (java.lang.OutOfMemoryError e) {
+                                    JOptionPane.showMessageDialog(null, "OutOfMemoryError!", "Alert",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Open data file first!", "Alert",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                        if (data != null && !"".equals(data.getDesiredValue().trim())) {
+                            Calendar endTime = Calendar.getInstance();
+                            System.out.println("Time-consuming (seconds): "
+                                    + (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000.0);
+                            JOptionPane.showMessageDialog(
+                                    null,
+                                    "Time-consuming (seconds): "
+                                            + (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000.0,
+                                    "Finished", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Open data file first!", "Alert", JOptionPane.ERROR_MESSAGE);
-                }
-                Calendar endTime = Calendar.getInstance();
-                System.out.println("Time-consuming (seconds): "
-                        + (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000.0);
-                JOptionPane.showMessageDialog(null, "Time-consuming (seconds): "
-                        + (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000.0, "Finished",
-                        JOptionPane.INFORMATION_MESSAGE);
+                }).start();
             }
         });
 
@@ -118,6 +130,11 @@ public class KDDGUI extends JPanel {
 
         // Add the scroll pane to this panel.
         add(scrollPaneTable, BorderLayout.CENTER);
+
+        KDDGUI.bar = new JProgressBar();
+        KDDGUI.bar.setMaximum(100);
+        KDDGUI.bar.setStringPainted(true);
+        add(KDDGUI.bar, BorderLayout.SOUTH);
     }
 
     /**
@@ -256,6 +273,18 @@ public class KDDGUI extends JPanel {
         for (int i = 0; i < table.getColumnCount(); i++) {
             column = table.getColumnModel().getColumn(i);
             column.setPreferredWidth(width);
+        }
+    }
+
+    /**
+     * Update progress bar
+     * 
+     * @param num
+     *            The new number of progress bar.
+     */
+    public static void showProgress(int num) {
+        if (KDDGUI.bar != null) {
+            KDDGUI.bar.setValue(num);
         }
     }
 

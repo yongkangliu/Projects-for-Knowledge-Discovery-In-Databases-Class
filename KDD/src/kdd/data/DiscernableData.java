@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kdd.ui.KDDGUI;
+
 /**
  * DiscernableData class stores data for the Table 4 in the paper.
  */
@@ -283,8 +285,9 @@ public class DiscernableData {
      * @return Return the new reducts after removed all sub string.
      */
     public List<String>[] absorptionLaw(List<String>[] inputList) {
+        int total = inputList.length - 2;
         for (int i = 0; i < inputList.length - 1; i++) {
-
+            KDDGUI.showProgress(100 * i / total);
             for (int j = i + 1; j < inputList.length; j++) {
                 if (inputList[i] != null && inputList[j] != null) {
                     if (inputList[i].size() <= inputList[j].size()) {
