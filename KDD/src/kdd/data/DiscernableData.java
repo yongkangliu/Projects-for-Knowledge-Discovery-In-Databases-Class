@@ -5,22 +5,63 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//Table 4 in the paper
+/**
+ * DiscernableData class stores data for the Table 4 in the paper.
+ */
 public class DiscernableData {
+
+    /**
+     * The DiscernableData object instance.
+     */
     private static DiscernableData instance = null;
 
+    /**
+     * The desired record set.
+     */
     private String[] desiredSet;
+
+    /**
+     * The undesired record set.
+     */
     private String[] undesiredSet;
+
+    /**
+     * The desired reducts set.
+     */
     private List<String>[][] desiredAlphaReducts;
+
+    /**
+     * The desired record set in a hashmap.
+     */
     private Map<String, Integer> desiredMap = new HashMap<String, Integer>();
+
+    /**
+     * The undesired record set in a hashmap.
+     */
     private Map<String, Integer> unDesiredMap = new HashMap<String, Integer>();
 
+    /**
+     * All discernable attribute values in a two-dimension array.
+     */
     private List<String>[][] dataSet;
 
+    /**
+     * The private constructor in singleton pattern.
+     */
     private DiscernableData() {
         // Nothing here.
     }
 
+    /**
+     * The private constructor in singleton pattern.
+     * 
+     * @param desiredSet
+     *            The desired record set.
+     * @param undesiredSet
+     *            The undesired record set.
+     * @param dataSet
+     *            All discernable attribute values in a two-dimension array.
+     */
     private DiscernableData(String[] desiredSet, String[] undesiredSet, List<String>[][] dataSet) {
         this.desiredMap.clear();
         this.unDesiredMap.clear();
@@ -45,16 +86,38 @@ public class DiscernableData {
         }
     }
 
+    /**
+     * Initialize data.
+     * 
+     * @param desiredSet
+     *            The desired record set.
+     * @param undesiredSet
+     *            The undesired record set.
+     * @param dataSet
+     *            All discernable attribute values in a two-dimension array.
+     * 
+     * @return Return the DiscernableData instance.
+     */
     public static DiscernableData initialize(String[] desiredSet, String[] undesiredSet, List<String>[][] dataSet) {
         DiscernableData data = new DiscernableData(desiredSet, undesiredSet, dataSet);
         DiscernableData.instance = data;
         return data;
     }
 
+    /**
+     * Get the DiscernableData instance.
+     * 
+     * @return Return the DiscernableData instance.
+     */
     public static DiscernableData getInstance() {
         return DiscernableData.instance;
     }
 
+    /**
+     * Get data for JTable display
+     * 
+     * @return The object array for JTable.
+     */
     public Object[][] getTableData() {
         String[][] tableData = new String[this.undesiredSet.length][this.desiredSet.length + 1];
         for (int i = 0; i < this.undesiredSet.length; i++) {
@@ -81,6 +144,11 @@ public class DiscernableData {
         return tableData;
     }
 
+    /**
+     * Get the column names for JTable display.
+     * 
+     * @return Return the column names for JTable.
+     */
     public String[] getTableColumnNames() {
         String[] names = new String[this.desiredSet.length + 1];
         for (int i = 1; i < names.length; i++) {
@@ -89,20 +157,44 @@ public class DiscernableData {
         return names;
     }
 
+    /**
+     * Get the specified discernable.
+     * 
+     * @param desiredName
+     *            The desired record name.
+     * @param unDesiredName
+     *            The undesired record name.
+     * @return Return the discernable value.
+     */
     public List<String> getValue(String desiredName, String unDesiredName) {
         int iDesiredName = this.desiredMap.get(desiredName);
         int iUnDesiredName = this.unDesiredMap.get(unDesiredName);
         return this.dataSet[iUnDesiredName][iDesiredName];
     }
 
+    /**
+     * Return the desired set.
+     * 
+     * @return Return the desired set.
+     */
     public String[] getDesiredSet() {
         return this.desiredSet;
     }
 
+    /**
+     * Return the undesired set.
+     * 
+     * @return Return the undesired set.
+     */
     public String[] getUnDesiredSet() {
         return this.undesiredSet;
     }
 
+    /**
+     * Calculate reducts and create the ReductData instance.
+     * 
+     * @return Return the ReductData instance.
+     */
     public ReductData calculateReductData() {
         for (int i = 0; i < this.desiredAlphaReducts.length; i++) {
             List<String>[] inputList = new ArrayList[this.dataSet.length];
@@ -132,6 +224,13 @@ public class DiscernableData {
         return ReductData.initialize(absorptionLaw(reducts));
     }
 
+    /**
+     * Convert CNF objects to DNF objects.
+     * 
+     * @param inputList
+     *            The CNF objects.
+     * @return Return the DNF objects.
+     */
     public List<String>[] convertCNF2DNF(List<String>[] inputList) {
         int numOfDNF = 1;
         for (int i = 0; i < inputList.length; i++) {
@@ -158,6 +257,15 @@ public class DiscernableData {
         return listDNF;
     }
 
+    /**
+     * Check if a list includes a string.
+     * 
+     * @param list
+     *            The list.
+     * @param str
+     *            The string.
+     * @return Return true if the list includes the string, otherwise return false.
+     */
     private boolean hasString(List<String> list, String str) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).equals(str)) {
@@ -167,8 +275,16 @@ public class DiscernableData {
         return false;
     }
 
+    /**
+     * The absorption laws. Remove all sub string.
+     * 
+     * @param inputList
+     *            The list which includes reducts.
+     * @return Return the new reducts after removed all sub string.
+     */
     public List<String>[] absorptionLaw(List<String>[] inputList) {
         for (int i = 0; i < inputList.length - 1; i++) {
+
             for (int j = i + 1; j < inputList.length; j++) {
                 if (inputList[i] != null && inputList[j] != null) {
                     if (inputList[i].size() <= inputList[j].size()) {
@@ -193,6 +309,15 @@ public class DiscernableData {
         return result.toArray(new List[result.size()]);
     }
 
+    /**
+     * Check if a list objects implicants another list objects.
+     * 
+     * @param a
+     *            The list objects.
+     * @param b
+     *            Another list objects.
+     * @return Return true if list a implicants list b, otherwise return false.
+     */
     public boolean isImplicant(List<String> a, List<String> b) {
         for (String strA : a) {
             boolean isFound = false;

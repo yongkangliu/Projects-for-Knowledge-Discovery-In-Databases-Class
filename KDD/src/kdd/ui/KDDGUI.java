@@ -27,23 +27,44 @@ import kdd.data.DiscernableData;
 import kdd.data.OriginalData;
 import kdd.data.ReductData;
 
+/**
+ * The GUI class of the application.
+ */
 public class KDDGUI extends JPanel {
 
     private static final long serialVersionUID = 5483099078233967340L;
+
+    /**
+     * The JTable instance displays all data.
+     */
     private static JTable table;
+
+    /**
+     * The table model instance for JTable.
+     */
     private static DataTableModel tableModel;
+
+    /**
+     * The desired value in JTextField.
+     */
     private static JTextField desiredValue = new JTextField("");
 
+    /**
+     * Constructor. Initialize the GUI.
+     */
     public KDDGUI() {
         super(new BorderLayout());
 
-        // Buttons
+        // Display The desired value.
         JPanel panel = new JPanel(new GridLayout(1, 3));
         panel.add(new JLabel("Desired Value:"));
         panel.add(desiredValue);
 
+        // Add RUN button.
         JButton runButton = new JButton("RUN");
         panel.add(runButton);
+
+        // Set action listener for the RUN button.
         runButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 Calendar startTime = Calendar.getInstance();
@@ -53,15 +74,20 @@ public class KDDGUI extends JPanel {
                     if ("".equals(desiredValue.getText())) {
                         JOptionPane.showMessageDialog(null, "Set desired value!", "Alert", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        data.setDesiredValue(desiredValue.getText());
-                        DiscernableData discernableData = data.caLculateDiscernableData();
-                        ReductData reductData = discernableData.calculateReductData();
+                        try {
+                            data.setDesiredValue(desiredValue.getText());
+                            DiscernableData discernableData = data.caLculateDiscernableData();
+                            ReductData reductData = discernableData.calculateReductData();
 
-                        DataTableModel tableModel = new DataTableModel(reductData.getRecommendationColumn(), reductData
-                                .createRecommendation());
-                        table.setModel(tableModel);
-                        table.repaint();
-                        setColumnWidth(600);
+                            DataTableModel tableModel = new DataTableModel(reductData.getRecommendationColumn(),
+                                    reductData.createRecommendation());
+                            table.setModel(tableModel);
+                            table.repaint();
+                            setColumnWidth(600);
+                        } catch (java.lang.OutOfMemoryError e) {
+                            JOptionPane
+                                    .showMessageDialog(null, "OutOfMemoryError!", "Alert", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Open data file first!", "Alert", JOptionPane.ERROR_MESSAGE);
@@ -69,6 +95,9 @@ public class KDDGUI extends JPanel {
                 Calendar endTime = Calendar.getInstance();
                 System.out.println("Time-consuming (seconds): "
                         + (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000.0);
+                JOptionPane.showMessageDialog(null, "Time-consuming (seconds): "
+                        + (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / 1000.0, "Finished",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -103,6 +132,7 @@ public class KDDGUI extends JPanel {
         JMenuBar jMenuBar = new JMenuBar();
         JMenu fileMenu1 = new JMenu("File");
 
+        // The menu for open file.
         JMenuItem openItem = new JMenuItem("Open File...");
         openItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -128,6 +158,7 @@ public class KDDGUI extends JPanel {
             }
         });
 
+        // The menu for close application
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -140,6 +171,7 @@ public class KDDGUI extends JPanel {
         fileMenu1.add(exitItem);
         jMenuBar.add(fileMenu1);
 
+        // The menu for display of Original Data.
         JMenu fileMenu2 = new JMenu("View");
         JMenuItem originalItem = new JMenuItem("Original Data");
         originalItem.addActionListener(new ActionListener() {
@@ -153,6 +185,7 @@ public class KDDGUI extends JPanel {
             }
         });
 
+        // The menu for display of Discernable Data.
         JMenuItem discernableItem = new JMenuItem("Discernable Data");
         discernableItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -165,6 +198,7 @@ public class KDDGUI extends JPanel {
             }
         });
 
+        // The menu for display of Reduct Data.
         JMenuItem reductItem = new JMenuItem("Reduct Data");
         reductItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -177,6 +211,7 @@ public class KDDGUI extends JPanel {
             }
         });
 
+        // The menu for display of Recommendations.
         JMenuItem recommendationItem = new JMenuItem("Recommendations");
         recommendationItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -210,6 +245,12 @@ public class KDDGUI extends JPanel {
         frame.setVisible(true);
     }
 
+    /**
+     * Set column width in the JTable.
+     * 
+     * @param width
+     *            The width value.
+     */
     private static void setColumnWidth(int width) {
         TableColumn column = null;
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -218,6 +259,11 @@ public class KDDGUI extends JPanel {
         }
     }
 
+    /**
+     * The main function.
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
@@ -227,5 +273,4 @@ public class KDDGUI extends JPanel {
             }
         });
     }
-
 }

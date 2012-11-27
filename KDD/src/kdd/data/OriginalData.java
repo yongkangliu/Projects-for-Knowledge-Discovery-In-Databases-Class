@@ -5,26 +5,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//Table 1 in the paper
+/**
+ * OriginalData class stores data for the Table 1 in the paper.
+ */
 public class OriginalData {
 
-    public static int ATTRIBUTE_STATUS_FLEXIBLE = 0;
-    public static int ATTRIBUTE_STATUS_STABLE = 1;
-    public static int ATTRIBUTE_STATUS_DECISION = 2;
-
+    /**
+     * The OriginalData object instance.
+     */
     private static OriginalData instance = null;
 
+    /**
+     * Stores all attribute names in a hashmap.
+     */
     private Map<String, Integer> attributesMap = new HashMap<String, Integer>();
+
+    /**
+     * Stores all record names in a hashmap.
+     */
     private Map<String, Integer> nameMap = new HashMap<String, Integer>();
 
+    /**
+     * Stores all values in a two-dimensional array.
+     */
     private String[][] dataSet = new String[][] {};
 
+    /**
+     * The desired value of decision attribute.
+     */
     private String desiredValue = "";
 
+    /**
+     * The private constructor in singleton pattern.
+     */
     private OriginalData() {
         // Nothing here.
     }
 
+    /**
+     * The private constructor in singleton pattern.
+     * 
+     * @param dataSet
+     *            The records values in a two-dimensional array.
+     */
     private OriginalData(String[][] dataSet) {
         this.attributesMap.clear();
         this.nameMap.clear();
@@ -40,16 +63,33 @@ public class OriginalData {
         }
     }
 
+    /**
+     * Initialize data.
+     * 
+     * @param dataSet
+     *            The records values in a two-dimensional array.
+     * @return Return the OriginalData instance.
+     */
     public static OriginalData initialize(String[][] dataSet) {
         OriginalData data = new OriginalData(dataSet);
         OriginalData.instance = data;
         return data;
     }
 
+    /**
+     * Get the OriginalData instance.
+     * 
+     * @return Return the OriginalData instance.
+     */
     public static OriginalData getInstance() {
         return OriginalData.instance;
     }
 
+    /**
+     * Get all records data.
+     * 
+     * @return The all records data in a two-dimensional array.
+     */
     public Object[][] getTableData() {
         String[][] data = new String[this.dataSet.length - 2][];
         for (int i = 0; i < data.length; i++) {
@@ -58,6 +98,11 @@ public class OriginalData {
         return data;
     }
 
+    /**
+     * Get the table column names, which are attribute names.
+     * 
+     * @return Return the table column names.
+     */
     public String[] getTableColumnNames() {
         String[] names = new String[this.dataSet[0].length];
         for (int i = 0; i < names.length; i++) {
@@ -68,7 +113,14 @@ public class OriginalData {
         return names;
     }
 
-    public String getReductPair(String reduct) {
+    /**
+     * Get the attribute name and value for a reduct.
+     * 
+     * @param reduct
+     *            The reduct.
+     * @return Return the attribute name and value.
+     */
+    private String getReductPair(String reduct) {
         for (int i = 0; i < this.dataSet.length; i++) {
             for (int j = 0; j < this.dataSet[0].length; j++) {
                 if (this.dataSet[i][j].equals(reduct)) {
@@ -83,6 +135,13 @@ public class OriginalData {
         return null;
     }
 
+    /**
+     * Get attributes names and values for reducts.
+     * 
+     * @param reduct
+     *            The reducts.
+     * @return Return the attributes names and values.
+     */
     public List<String> getRecommendationRules(List<String> reduct) {
         List<String> rules = new ArrayList<String>();
         for (int i = 0; i < reduct.size(); i++) {
@@ -94,6 +153,15 @@ public class OriginalData {
         return rules;
     }
 
+    /**
+     * Check if the reducts can be found in a undesired record and the reduct's attribute is stable.
+     * 
+     * @param name
+     *            The undesired record name.
+     * @param reduct
+     *            The reducts
+     * @return Return true if it is found, otherwise return false.
+     */
     public boolean isFoundStableWithReduct(String name, List<String> reduct) {
         int row = this.nameMap.get(name);
         for (int j = 0; j < reduct.size(); j++) {
@@ -108,6 +176,16 @@ public class OriginalData {
         return false;
     }
 
+    /**
+     * Check if the reducts can be found in a desired record. If the reducts' attribute is stable, ignore it and return
+     * true.
+     * 
+     * @param name
+     *            The desired record name.
+     * @param reduct
+     *            The reducts
+     * @return Return true if it is found, otherwise return false.
+     */
     public boolean isFoundWithReduct(String name, List<String> reduct) {
         int row = this.nameMap.get(name);
         for (int j = 0; j < reduct.size(); j++) {
@@ -129,6 +207,15 @@ public class OriginalData {
         return true;
     }
 
+    /**
+     * Get one of the record values.
+     * 
+     * @param name
+     *            The record name.
+     * @param attribute
+     *            The attribute name.
+     * @return Return the value.
+     */
     public String getValue(String name, String attribute) {
         int iName = this.nameMap.get(name);
         int iAttribute = this.attributesMap.get(attribute);
@@ -140,6 +227,11 @@ public class OriginalData {
         }
     }
 
+    /**
+     * Calculate the discernable attributes and create DiscernableData instance.
+     * 
+     * @return Return the DiscernableData instance.
+     */
     public DiscernableData caLculateDiscernableData() {
         List<String> desiredList = new ArrayList<String>();
         List<String> unDesiredList = new ArrayList<String>();
@@ -180,10 +272,21 @@ public class OriginalData {
                 unDesiredList.toArray(new String[unDesiredList.size()]), discernableData);
     }
 
+    /**
+     * Get the desired value.
+     * 
+     * @return Return the desired value of decision attribute.
+     */
     public String getDesiredValue() {
         return this.desiredValue;
     }
 
+    /**
+     * Set the desired value of decision attribute.
+     * 
+     * @param desiredValue
+     *            The desired value.
+     */
     public void setDesiredValue(String desiredValue) {
         this.desiredValue = desiredValue;
     }

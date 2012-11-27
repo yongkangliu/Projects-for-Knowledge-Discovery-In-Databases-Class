@@ -2,21 +2,54 @@ package kdd.data;
 
 import java.util.List;
 
-//Table 5 in the paper
+/**
+ * ReductData class stores data for the Table 5 in the paper.
+ */
 public class ReductData {
+
+    /**
+     * '0' represents the Weight.
+     */
     public static int WEIGHT = 0;
+
+    /**
+     * '1' represents the Frequency.
+     */
     public static int FREQUENCY = 1;
+
+    /**
+     * '2' represents the hit ratio.
+     */
     public static int HIT_RATIO = 2;
 
+    /**
+     * The ReductData object instance.
+     */
     private static ReductData instance = null;
 
+    /**
+     * All reducts.
+     */
     private List<String>[] reducts;
+
+    /**
+     * All weight, frequency and hit ratio of reducts.
+     */
     private double[][] reductValues;
 
+    /**
+     * The private constructor in singleton pattern.
+     */
     private ReductData() {
         // Nothing here.
     }
 
+    /**
+     * The private constructor in singleton pattern.
+     * 
+     * @param reducts
+     *            The reducts.
+     */
     private ReductData(List<String>[] reducts) {
         this.reducts = reducts;
 
@@ -24,16 +57,33 @@ public class ReductData {
         this.reductValues = new double[reducts.length][3];
     }
 
+    /**
+     * Initialize data.
+     * 
+     * @param reducts
+     *            The reducts.
+     * @return Return the ReductData instance.
+     */
     public static ReductData initialize(List<String>[] reducts) {
         ReductData data = new ReductData(reducts);
         ReductData.instance = data;
         return data;
     }
 
+    /**
+     * Get the ReductData instance.
+     * 
+     * @return Return the ReductData instance.
+     */
     public static ReductData getInstance() {
         return ReductData.instance;
     }
 
+    /**
+     * Get data for JTable display
+     * 
+     * @return The object array for JTable.
+     */
     public Object[][] getTableData() {
         String[][] data = new String[reducts.length][4];
         for (int i = 0; i < reducts.length; i++) {
@@ -45,10 +95,18 @@ public class ReductData {
         return data;
     }
 
+    /**
+     * Get the column names for JTable display.
+     * 
+     * @return Return the column names for JTable.
+     */
     public String[] getTableColumnNames() {
         return new String[] { "Alpha-reduct", "Weight (w)", "Frequency (f)", "Hit ratio (h)" };
     }
 
+    /**
+     * Calculate weight values with frequency values and hit ratio values.
+     */
     private void calculateWeight() {
         DiscernableData discernableData = DiscernableData.getInstance();
         String[] desiredSet = discernableData.getDesiredSet();
@@ -84,10 +142,20 @@ public class ReductData {
         }
     }
 
+    /**
+     * Get the column names of recommendation for JTable display.
+     * 
+     * @return Return the column names for JTable.
+     */
     public String[] getRecommendationColumn() {
         return new String[] { "Recommendations" };
     }
 
+    /**
+     * Create recommendation and get data for JTable display
+     * 
+     * @return The object array for JTable.
+     */
     public String[][] createRecommendation() {
         calculateWeight();
 

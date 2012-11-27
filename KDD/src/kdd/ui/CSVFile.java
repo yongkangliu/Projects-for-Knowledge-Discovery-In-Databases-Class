@@ -8,8 +8,20 @@ import java.util.List;
 
 import kdd.data.OriginalData;
 
+/**
+ * Read CSV file
+ */
 public class CSVFile {
 
+    /**
+     * Read CSV file and create OriginalData instance.
+     * 
+     * @param fileName
+     *            The CSV file name.
+     * @return Return the OriginalData instance.
+     * @throws IOException
+     *             throw exception if the file isn't found.
+     */
     public static OriginalData readCSV(String fileName) throws IOException {
 
         BufferedReader CSVFile = new BufferedReader(new FileReader(fileName));
@@ -19,23 +31,25 @@ public class CSVFile {
 
         while (dataRow != null) {
             String[] dataArray = dataRow.split(",");
-            for (int i = 0; i < dataArray.length; i++) {
-                dataArray[i] = dataArray[i].trim();
+            if (dataArray.length > 1) {
+                for (int i = 0; i < dataArray.length; i++) {
+                    dataArray[i] = dataArray[i].trim();
+                }
+                list.add(dataArray);
             }
-            list.add(dataArray);
             dataRow = CSVFile.readLine();
         }
 
         CSVFile.close();
         String[][] result = list.toArray(new String[list.size()][list.get(0).length]);
 
-//        for (int i = 2; i < result.length; i++) {
-//            for (int j = 1; j < result[0].length; j++) {
-//                if (!"".equals(result[i][j])) {
-//                    result[i][j] = result[0][j] + ":" + result[i][j];
-//                }
-//            }
-//        }
+        // for (int i = 2; i < result.length; i++) {
+        // for (int j = 1; j < result[0].length; j++) {
+        // if (!"".equals(result[i][j])) {
+        // result[i][j] = result[0][j] + ":" + result[i][j];
+        // }
+        // }
+        // }
 
         return OriginalData.initialize(result);
     }
